@@ -8,38 +8,40 @@ export default class AuthService extends APIService {
     lastName: string,
     username: string,
     password: string,
-  ): Promise<ApiResponse<void>> => this.apiClient.post('/accounts', {
-    first_name: firstName,
-    last_name: lastName,
-    username,
-    password,
-  });
+  ): Promise<ApiResponse<void>> =>
+    this.apiClient.post('/accounts', {
+      first_name: firstName,
+      last_name: lastName,
+      username,
+      password,
+    });
 
   login = async (
     username: string,
     password: string,
-  ): Promise<ApiResponse<AccessToken>> => this.apiClient.post('/access-tokens', {
-    username,
-    password,
-  });
+  ): Promise<ApiResponse<AccessToken>> =>
+    this.apiClient.post('/access-tokens', {
+      username,
+      password,
+    });
 
-  sendOTP = async (
-    phoneNumber: PhoneNumber,
-  ): Promise<ApiResponse<void>> => this.apiClient.post('/accounts', {
-    phone_number: {
-      country_code: phoneNumber.countryCode,
-      phone_number: phoneNumber.phoneNumber,
-    },
-  });
+  sendOTP = async (phoneNumber: PhoneNumber): Promise<ApiResponse<void>> =>
+    this.apiClient.post('/accounts', {
+      phone_number: {
+        country_code: phoneNumber.countryCode,
+        phone_number: phoneNumber.phoneNumber,
+      },
+    });
 
   verifyOTP = async (
     phoneNumber: PhoneNumber,
     otp: string,
-  ): Promise<ApiResponse<AccessToken>> => this.apiClient.post('/access-tokens', {
-    phone_number: {
-      country_code: phoneNumber.countryCode,
-      phone_number: phoneNumber.phoneNumber,
-    },
-    otp_code: otp,
-  });
+  ): Promise<ApiResponse<AccessToken>> =>
+    this.apiClient.post('/access-tokens', {
+      phone_number: {
+        country_code: phoneNumber.countryCode,
+        phone_number: phoneNumber.phoneNumber,
+      },
+      otp_code: otp,
+    });
 }

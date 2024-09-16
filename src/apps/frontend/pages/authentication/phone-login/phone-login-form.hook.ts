@@ -37,7 +37,8 @@ const usePhoneLoginForm = ({
         values.phoneNumber,
         values.country,
       );
-      const isValidPhoneNumber = PhoneNumberUtil.getInstance().isValidNumber(parsedPhoneNumber);
+      const isValidPhoneNumber =
+        PhoneNumberUtil.getInstance().isValidNumber(parsedPhoneNumber);
 
       if (!isValidPhoneNumber) {
         onError({ message: constant.PHONE_VALIDATION_ERROR } as AsyncError);

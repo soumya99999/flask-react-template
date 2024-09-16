@@ -9,5 +9,13 @@ import Login from './login';
 import NotFound from './not-found/not-found.page';
 
 export {
-  About, Dashboard, ForgotPassword, NotFound, ResetPassword, Signup, OTPPage, PhoneLogin, Login,
+  About,
+  Dashboard,
+  ForgotPassword,
+  NotFound,
+  ResetPassword,
+  Signup,
+  OTPPage,
+  PhoneLogin,
+  Login,
 };

@@ -4,7 +4,13 @@ import { Navigate } from 'react-router-dom';
 import routes from '../constants/routes';
 import { ResetPasswordProvider } from '../contexts';
 import {
-  About, ForgotPassword, Login, OTPPage, PhoneLogin, ResetPassword, Signup,
+  About,
+  ForgotPassword,
+  Login,
+  OTPPage,
+  PhoneLogin,
+  ResetPassword,
+  Signup,
 } from '../pages';
 
 import AuthRoute from './auth-route';
@@ -16,11 +22,19 @@ export const publicRoutes = [
   },
   {
     path: routes.FORGOT_PASSWORD,
-    element: <ResetPasswordProvider><ForgotPassword /></ResetPasswordProvider>,
+    element: (
+      <ResetPasswordProvider>
+        <ForgotPassword />
+      </ResetPasswordProvider>
+    ),
   },
   {
     path: routes.RESET_PASSWORD,
-    element: <ResetPasswordProvider><ResetPassword /></ResetPasswordProvider>,
+    element: (
+      <ResetPasswordProvider>
+        <ResetPassword />
+      </ResetPasswordProvider>
+    ),
   },
   {
     path: routes.SIGNUP,

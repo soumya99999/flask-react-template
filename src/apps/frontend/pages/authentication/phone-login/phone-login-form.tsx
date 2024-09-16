@@ -21,20 +21,34 @@ interface PhoneLoginFormProps {
   onError: (error: AsyncError) => void;
 }
 
-const PhoneLoginForm: React.FC<PhoneLoginFormProps> = ({ onError, onSendOTPSuccess }) => {
-  const { formik, isSendOTPLoading } = usePhoneLoginForm({ onSendOTPSuccess, onError });
+const PhoneLoginForm: React.FC<PhoneLoginFormProps> = ({
+  onError,
+  onSendOTPSuccess,
+}) => {
+  const { formik, isSendOTPLoading } = usePhoneLoginForm({
+    onSendOTPSuccess,
+    onError,
+  });
 
   const setFormikFieldValue = (fieldName: string, data: string) => {
-    formik.setFieldValue(fieldName, data)
-      .then().catch((err) => { onError(err as AsyncError); });
+    formik
+      .setFieldValue(fieldName, data)
+      .then()
+      .catch((err) => {
+        onError(err as AsyncError);
+      });
   };
 
-  const handleChangePhone = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangePhone = ({
+    target,
+  }: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = target;
     setFormikFieldValue('phoneNumber', value);
   };
 
-  const handleChangeSelect = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeSelect = ({
+    target,
+  }: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = target;
     const [countryCode, country] = value.split(', ');
     setFormikFieldValue('country', country);
@@ -70,14 +84,14 @@ const PhoneLoginForm: React.FC<PhoneLoginFormProps> = ({ onError, onSendOTPSucce
                 onChange={handleChangePhone}
                 onBlur={formik.handleBlur}
                 placeholder="Enter your phone number"
-                type='number'
+                type="number"
                 value={formik.values.phoneNumber}
               />
             </FormControl>
           </div>
         </Flex>
 
-        <Flex justifyContent='end'>
+        <Flex justifyContent="end">
           <Link
             to={routes.LOGIN}
             className="text-sm text-primary hover:underline"
@@ -86,7 +100,11 @@ const PhoneLoginForm: React.FC<PhoneLoginFormProps> = ({ onError, onSendOTPSucce
           </Link>
         </Flex>
 
-        <Button type={ButtonType.SUBMIT} isLoading={isSendOTPLoading} kind={ButtonKind.PRIMARY}>
+        <Button
+          type={ButtonType.SUBMIT}
+          isLoading={isSendOTPLoading}
+          kind={ButtonKind.PRIMARY}
+        >
           Get OTP
         </Button>
       </VerticalStackLayout>

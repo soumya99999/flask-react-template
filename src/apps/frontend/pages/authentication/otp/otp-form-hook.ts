@@ -34,8 +34,7 @@ const useOTPForm = ({
     },
 
     validationSchema: Yup.object({
-      otp: Yup.array()
-        .of(Yup.string().required('')),
+      otp: Yup.array().of(Yup.string().required('')),
     }),
 
     onSubmit: (values) => {
@@ -47,9 +46,10 @@ const useOTPForm = ({
           phone_number: phoneNumber,
         }),
         otp,
-      ).then(() => {
-        onVerifyOTPSuccess();
-      })
+      )
+        .then(() => {
+          onVerifyOTPSuccess();
+        })
         .catch((error) => {
           onError(error as AsyncError);
         });
@@ -57,10 +57,12 @@ const useOTPForm = ({
   });
 
   const handleResendOTP = () => {
-    sendOTP(new PhoneNumber({
-      country_code: countryCode,
-      phone_number: phoneNumber,
-    }))
+    sendOTP(
+      new PhoneNumber({
+        country_code: countryCode,
+        phone_number: phoneNumber,
+      }),
+    )
       .then(() => {
         onResendOTPSuccess();
       })

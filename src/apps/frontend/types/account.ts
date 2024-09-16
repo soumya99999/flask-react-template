@@ -12,11 +12,13 @@ export class Account {
     this.id = json.id as string;
     this.firstName = json.first_name as string;
     this.lastName = json.last_name as string;
-    this.phoneNumber = json.phone_number ? new PhoneNumber(json.phone_number as JsonObject) : null;
+    this.phoneNumber = json.phone_number
+      ? new PhoneNumber(json.phone_number as JsonObject)
+      : null;
     this.username = json.username as string;
   }
 
   displayName(): string {
-    return (`${this.firstName} ${this.lastName}`).trim();
+    return `${this.firstName} ${this.lastName}`.trim();
   }
 }
