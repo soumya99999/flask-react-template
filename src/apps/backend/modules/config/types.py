@@ -1,9 +1,3 @@
-from dataclasses import dataclass
+from typing import TypeVar
 
-
-@dataclass(frozen=True)
-class DatadogConfig:
-    api_key: str
-    app_name: str
-    datadog_log_level: str
-    host: str
+ConfigType = TypeVar("ConfigType", bound=bool | dict | float | int | list | str)
