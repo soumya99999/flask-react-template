@@ -1,4 +1,5 @@
 import logging
+
 from modules.logger.internal.base_logger import BaseLogger
 from modules.logger.internal.datadog_handler import DatadogHandler
 from modules.logger.internal.datadog_handler_level import LogLevel
@@ -9,11 +10,9 @@ class DatadogLogger(BaseLogger):
         self.level = LogLevel.get_level()
         self.logger = logging.getLogger(__name__)
         self.format = "[%(asctime)s] - %(name)s - %(levelname)s - %(message)s"
-        self.formatter = logging.Formatter(
-            self.format,
-        )
+        self.formatter = logging.Formatter(self.format)
         self.logger.setLevel(LogLevel.get_level())
-        self.handler = DatadogHandler('flask')
+        self.handler = DatadogHandler("flask")
         self.handler.setLevel(LogLevel.get_level())
         self.handler.setFormatter(self.formatter)
         self.logger.addHandler(self.handler)
