@@ -139,12 +139,21 @@ You can define workers in any module, preferably in a `/workers` directory. A wo
 You can use the `HealthCheckWorker` inside the `application` module as a reference.
 
 ```python
+from typing import Any
 from modules.application.types import BaseWorker
-
 class ExampleWorker(BaseWorker):
-    async def run(self):
-        ... # Your worker logic here
+    async def execute(self, *args: Any) -> None:
+        # Your worker logic here
+        ...
+
+    async def run(self, *args: Any) -> None:
+        await super().run(*args)
 ```
+
+Optionally, you can specify the following parameters in the worker class:
+
+1. `max_execution_time_in_seconds` - The time in seconds to wait for the worker to finish its execution. If the worker does not finish within this time, it will be cancelled.
+2. `max_retries` - The maximum number of times the worker will be retried in case of failure. If the worker fails more than this number of times, it will be marked as failed and will not be retried again.
 
 Once a worker is defined, it needs to be imported in the [`temporal_config.py`](src/apps/backend/temporal_config.py) and added to the `WORKERS` list.
 
