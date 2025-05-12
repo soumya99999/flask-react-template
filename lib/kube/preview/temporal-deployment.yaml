@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporal-deployment
+  name: $KUBE_APP-temporal-deployment
   namespace: $KUBE_NS
   labels:
-    app: temporal
+    app: $KUBE_APP-temporal
     version: $GITHUB_SHA
   annotations:
     secrets.doppler.com/reload: 'true'
@@ -12,11 +12,11 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: temporal
+      app: $KUBE_APP-temporal
   template:
     metadata:
       labels:
-        app: temporal
+        app: $KUBE_APP-temporal
     spec:
       imagePullSecrets:
         - name: regcred
