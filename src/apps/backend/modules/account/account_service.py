@@ -6,6 +6,7 @@ from modules.account.types import (
     AccountSearchParams,
     CreateAccountByPhoneNumberParams,
     CreateAccountByUsernameAndPasswordParams,
+    AccountDeletionResult,
     PhoneNumber,
     ResetPasswordParams,
     UpdateAccountProfileParams,
@@ -80,3 +81,7 @@ class AccountService:
     @staticmethod
     def get_account_notification_preferences_by_account_id(*, account_id: str) -> AccountNotificationPreferences:
         return NotificationService.get_account_notification_preferences_by_account_id(account_id=account_id)
+
+    @staticmethod
+    def delete_account(*, account_id: str) -> AccountDeletionResult:
+        return AccountWriter.delete_account(account_id=account_id)

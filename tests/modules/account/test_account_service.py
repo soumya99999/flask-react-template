@@ -1,3 +1,4 @@
+from datetime import datetime
 from unittest.mock import patch
 
 from server import app
@@ -182,3 +183,115 @@ class TestAccountService(BaseTestAccount):
         assert updated_account.phone_number == phone_number
         assert updated_account.first_name == "Phone"
         assert updated_account.last_name == "User"
+
+    def test_delete_account_success(self) -> None:
+        account = AccountService.create_account_by_username_and_password(
+            params=CreateAccountByUsernameAndPasswordParams(
+                first_name="first_name", last_name="last_name", password="password", username="username"
+            )
+        )
+
+        deletion_result = AccountService.delete_account(account_id=account.id)
+
+        assert deletion_result.account_id == account.id
+        assert deletion_result.success is True
+        assert deletion_result.deleted_at is not None
+        assert isinstance(deletion_result.deleted_at, datetime)
+
+    def test_delete_account_not_found(self) -> None:
+        non_existent_account_id = "5f7b1b7b4f3b9b1b3f3b9b1b"
+
+        try:
+            AccountService.delete_account(account_id=non_existent_account_id)
+            assert False, "Expected AccountWithIdNotFoundError to be raised"
+        except AccountWithIdNotFoundError as exc:
+            assert (
+                exc.message
+                == f"We could not find an account with id: {non_existent_account_id}. Please verify and try again."
+            )
+
+    def test_deleted_account_not_found_by_username(self) -> None:
+        account = AccountService.create_account_by_username_and_password(
+            params=CreateAccountByUsernameAndPasswordParams(
+                first_name="first_name", last_name="last_name", password="password", username="username"
+            )
+        )
+
+        deletion_result = AccountService.delete_account(account_id=account.id)
+        assert deletion_result.success is True
+
+        try:
+            AccountService.get_account_by_username(username=account.username)
+            assert False, "Expected AccountWithUsernameNotFoundError to be raised"
+        except AccountNotFoundError as exc:
+            assert exc.code == AccountErrorCode.NOT_FOUND
+
+    def test_deleted_account_not_found_by_id(self) -> None:
+        account = AccountService.create_account_by_username_and_password(
+            params=CreateAccountByUsernameAndPasswordParams(
+                first_name="first_name", last_name="last_name", password="password", username="username"
+            )
+        )
+
+        deletion_result = AccountService.delete_account(account_id=account.id)
+        assert deletion_result.success is True
+
+        try:
+            AccountService.get_account_by_id(params=AccountSearchByIdParams(id=account.id))
+            assert False, "Expected AccountWithIdNotFoundError to be raised"
+        except AccountNotFoundError as exc:
+            assert exc.code == AccountErrorCode.NOT_FOUND
+
+    def test_deleted_phone_number_account_not_found(self) -> None:
+        phone_number = PhoneNumber(country_code="+91", phone_number="9999999999")
+        account = AccountService.get_or_create_account_by_phone_number(
+            params=CreateAccountByPhoneNumberParams(phone_number=phone_number)
+        )
+
+        deletion_result = AccountService.delete_account(account_id=account.id)
+        assert deletion_result.success is True
+
+        try:
+            AccountService.get_account_by_phone_number(phone_number=phone_number)
+            assert False, "Expected AccountWithPhoneNumberNotFoundError to be raised"
+        except AccountNotFoundError as exc:
+            assert exc.code == AccountErrorCode.NOT_FOUND
+
+    def test_can_create_new_account_with_same_username_after_deletion(self) -> None:
+        original_account = AccountService.create_account_by_username_and_password(
+            params=CreateAccountByUsernameAndPasswordParams(
+                first_name="first_name", last_name="last_name", password="password", username="username"
+            )
+        )
+
+        deletion_result = AccountService.delete_account(account_id=original_account.id)
+        assert deletion_result.success is True
+
+        new_account = AccountService.create_account_by_username_and_password(
+            params=CreateAccountByUsernameAndPasswordParams(
+                first_name="new_first_name", last_name="new_last_name", password="new_password", username="username"
+            )
+        )
+
+        assert new_account.username == "username"
+        assert new_account.first_name == "new_first_name"
+        assert new_account.id != original_account.id
+
+    def test_can_create_new_account_with_same_phone_number_after_deletion(self) -> None:
+        phone_number = PhoneNumber(country_code="+91", phone_number="9999999999")
+
+        original_account = AccountService.get_or_create_account_by_phone_number(
+            params=CreateAccountByPhoneNumberParams(phone_number=phone_number)
+        )
+
+        deletion_result = AccountService.delete_account(account_id=original_account.id)
+        assert deletion_result.success is True
+
+        new_account = AccountService.get_or_create_account_by_phone_number(
+            params=CreateAccountByPhoneNumberParams(phone_number=phone_number)
+        )
+
+        assert new_account.phone_number == phone_number
+        assert new_account.id != original_account.id
+        assert new_account.phone_number.country_code == "+91"
+        assert new_account.phone_number.phone_number == "9999999999"

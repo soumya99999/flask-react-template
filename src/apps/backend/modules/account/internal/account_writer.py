@@ -1,4 +1,5 @@
 from dataclasses import asdict
+from datetime import datetime
 
 from bson.objectid import ObjectId
 from phonenumbers import is_valid_number, parse
@@ -13,6 +14,7 @@ from modules.account.types import (
     Account,
     CreateAccountByPhoneNumberParams,
     CreateAccountByUsernameAndPasswordParams,
+    AccountDeletionResult,
     PhoneNumber,
     UpdateAccountProfileParams,
 )
@@ -87,3 +89,17 @@ class AccountWriter:
             raise AccountWithIdNotFoundError(id=account_id)
 
         return AccountUtil.convert_account_bson_to_account(updated_account)
+
+    @staticmethod
+    def delete_account(*, account_id: str) -> AccountDeletionResult:
+        deletion_time = datetime.now()
+        updated_account = AccountRepository.collection().find_one_and_update(
+            {"_id": ObjectId(account_id), "active": True},
+            {"$set": {"active": False, "updated_at": deletion_time}},
+            return_document=ReturnDocument.AFTER,
+        )
+
+        if updated_account is None:
+            raise AccountWithIdNotFoundError(id=account_id)
+
+        return AccountDeletionResult(account_id=account_id, deleted_at=deletion_time, success=True)
