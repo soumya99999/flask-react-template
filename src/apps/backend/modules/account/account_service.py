@@ -14,13 +14,23 @@ from modules.account.types import (
 from modules.authentication.authentication_service import AuthenticationService
 from modules.authentication.types import CreateOTPParams
 from modules.notification.notification_service import NotificationService
-from modules.notification.types import CreateOrUpdateAccountNotificationPreferencesParams, AccountNotificationPreferences
+from modules.notification.types import (
+    CreateOrUpdateAccountNotificationPreferencesParams,
+    AccountNotificationPreferences,
+)
 
 
 class AccountService:
     @staticmethod
     def create_account_by_username_and_password(*, params: CreateAccountByUsernameAndPasswordParams) -> Account:
-        return AccountWriter.create_account_by_username_and_password(params=params)
+        account = AccountWriter.create_account_by_username_and_password(params=params)
+        AccountService.create_or_update_account_notification_preferences(
+            account_id=account.id,
+            preferences=CreateOrUpdateAccountNotificationPreferencesParams(
+                email_enabled=True, push_enabled=True, sms_enabled=True
+            ),
+        )
+        return account
 
     @staticmethod
     def get_account_by_phone_number(*, phone_number: PhoneNumber) -> Account:
@@ -32,6 +42,12 @@ class AccountService:
 
         if account is None:
             account = AccountWriter.create_account_by_phone_number(params=params)
+            AccountService.create_or_update_account_notification_preferences(
+                account_id=account.id,
+                preferences=CreateOrUpdateAccountNotificationPreferencesParams(
+                    email_enabled=True, push_enabled=True, sms_enabled=True
+                ),
+            )
 
         create_otp_params = CreateOTPParams(phone_number=params.phone_number)
         AuthenticationService.create_otp(params=create_otp_params, account_id=account.id)
