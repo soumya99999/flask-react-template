@@ -7,6 +7,10 @@ import {
   ResetPasswordProvider,
   useResetPasswordContext,
 } from 'frontend/contexts/reset-password.provider';
+import {
+  TaskProvider,
+  useTaskContext,
+} from 'frontend/contexts/task.provider';
 
 export {
   AccountProvider,
@@ -15,4 +19,6 @@ export {
   useAuthContext,
   ResetPasswordProvider,
   useResetPasswordContext,
+  TaskProvider,
+  useTaskContext,
 };

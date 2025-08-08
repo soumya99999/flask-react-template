@@ -12,3 +12,15 @@ class TaskNotFoundError(AppError):
 class TaskBadRequestError(AppError):
     def __init__(self, message: str) -> None:
         super().__init__(code=TaskErrorCode.BAD_REQUEST, http_status_code=400, message=message)
+
+
+class CommentNotFoundError(AppError):
+    def __init__(self, comment_id: str) -> None:
+        super().__init__(
+            code=TaskErrorCode.COMMENT_NOT_FOUND, http_status_code=404, message=f"Comment with id {comment_id} not found."
+        )
+
+
+class CommentBadRequestError(AppError):
+    def __init__(self, message: str) -> None:
+        super().__init__(code=TaskErrorCode.COMMENT_BAD_REQUEST, http_status_code=400, message=message)

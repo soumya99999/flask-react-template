@@ -138,3 +138,32 @@
 .apexcharts-yaxistooltip {
   @apply text-body dark:text-bodydark;
 }
+
+/* Task Management Styles */
+.task-card {
+  @apply bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow duration-200;
+}
+
+.task-modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.task-modal-content {
+  @apply bg-white rounded-lg p-6 w-full max-w-md mx-4;
+}
+
+.task-form-container {
+  @apply space-y-4;
+}
+
+.task-list-container {
+  @apply space-y-6;
+}
+
+.task-empty-state {
+  @apply text-center py-8;
+}
+
+.task-loading-state {
+  @apply flex justify-center items-center py-8;
+}
